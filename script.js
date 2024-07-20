@@ -3,6 +3,7 @@ const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('capture');
 const switchCameraButton = document.getElementById('switchCamera');
 const result = document.getElementById('result');
+const predictionSpan = document.getElementById('prediction'); // Contenedor para la predicción
 const context = canvas.getContext('2d');
 let model;
 let currentStream;
@@ -41,7 +42,7 @@ async function predict(imageTensor) {
     const prediction = model.predict(imageTensor);
     const predictedClass = prediction.argMax(1).dataSync()[0];
     const classes = ['Perro', 'Gato'];
-    result.textContent = `Resultado: ${classes[predictedClass]}`;
+    predictionSpan.textContent = classes[predictedClass]; // Actualizar el contenido del span con la predicción
 }
 
 async function init() {
@@ -50,3 +51,4 @@ async function init() {
 }
 
 init();
+
