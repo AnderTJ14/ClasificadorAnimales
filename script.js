@@ -50,19 +50,3 @@ async function init() {
 }
 
 init();
-async function loadModel() {
-    try {
-        const model = await tf.loadLayersModel('model/model.json');
-        console.log('Modelo cargado:', model);
-        return model;
-    } catch (error) {
-        console.error('Error al cargar el modelo:', error);
-    }
-}
-
-loadModel().then(model => {
-    if (model) {
-        // Usar el modelo para hacer predicciones
-        console.log('Modelo cargado exitosamente');
-    }
-});
