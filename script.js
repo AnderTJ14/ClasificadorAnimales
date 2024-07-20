@@ -34,10 +34,13 @@ async function loadModel() {
 captureButton.addEventListener('click', () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    let imageTensor = tf.browser.fromPixels(imageData).resizeNearestNeighbor([100, 100]).toFloat().expandDims();
+    let imageTensor = tf.browser.fromPixels(imageData).resizeNearestNeighbor([100, 100]).toFloat();
 
     // Convertir la imagen a escala de grises
-    imageTensor = tf.image.rgbToGrayscale(imageTensor).expandDims(3);
+    imageTensor = tf.image.rgbToGrayscale(imageTensor);
+
+    // Asegurarse de que el tensor tenga 4 dimensiones
+    imageTensor = imageTensor.expandDims(0); // [batchSize, height, width, channels]
 
     predict(imageTensor);
 });
@@ -50,7 +53,7 @@ switchCameraButton.addEventListener('click', () => {
 async function predict(imageTensor) {
     try {
         // Verificar que la imagen tenga las dimensiones correctas
-        console.log('Tensor de imagen (gris):', imageTensor.shape);
+        console.log('Tensor de imagen:', imageTensor.shape);
 
         // Realizar la predicción
         const prediction = model.predict(imageTensor);
