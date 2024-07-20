@@ -3,7 +3,7 @@ const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('capture');
 const switchCameraButton = document.getElementById('switchCamera');
 const result = document.getElementById('result');
-const predictionSpan = document.getElementById('prediction'); // Contenedor para la predicción
+const predictionSpan = document.getElementById('prediction');
 const context = canvas.getContext('2d');
 let model;
 let currentStream;
@@ -23,7 +23,12 @@ async function setupCamera() {
 }
 
 async function loadModel() {
-    model = await tf.loadLayersModel('model/model.json');
+    try {
+        model = await tf.loadLayersModel('model/model.json');
+        console.log('Modelo cargado correctamente');
+    } catch (error) {
+        console.error('Error al cargar el modelo:', error);
+    }
 }
 
 captureButton.addEventListener('click', () => {
@@ -39,11 +44,26 @@ switchCameraButton.addEventListener('click', () => {
 });
 
 async function predict(imageTensor) {
-    const prediction = model.predict(imageTensor);
-    const predictedClass = prediction.argMax(1).dataSync()[0];
-    const classes = ['Perro', 'Gato'];
-    predictionSpan.textContent = classes[predictedClass]; // Actualizar el contenido del span con la predicción
+    try {
+        const prediction = model.predict(imageTensor);
+        prediction.print(); // Imprime los valores de predicción en la consola
+        const predictedClass = prediction.argMax(1).dataSync()[0];
+        console.log('Clase predicha:', predictedClass);
+        const classes = ['Perro', 'Gato'];
+        predictionSpan.textContent = classes[predictedClass];
+    } catch (error) {
+        console.error('Error en la predicción:', error);
+    }
 }
+
+function resizeCanvas() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+}
+
+video.addEventListener('loadedmetadata', () => {
+    resizeCanvas();
+});
 
 async function init() {
     await setupCamera();
@@ -51,4 +71,3 @@ async function init() {
 }
 
 init();
-
