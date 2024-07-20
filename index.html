@@ -8,14 +8,19 @@
 </head>
 <body>
     <h1>Clasificador de Animales con Python</h1>
-    <video id="video" width="320" height="240" autoplay></video>
-    <button id="capture">Capturar</button>
-    <button id="switchCamera">Cambiar Cámara</button>
-    <canvas id="canvas" width="320" height="240"></canvas>
+    <div class="camera-container">
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="buttons">
+        <button id="capture">Capturar</button>
+        <button id="switchCamera">Cambiar Cámara</button>
+    </div>
     <p id="result">Resultado: </p>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
 
