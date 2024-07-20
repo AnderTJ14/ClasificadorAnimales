@@ -46,5 +46,6 @@ button {
     font-weight: bold;
 }
 
-
-
+#prediction {
+    font-weight: normal;
+}
