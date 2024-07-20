@@ -39,8 +39,8 @@ captureButton.addEventListener('click', () => {
     // Convertir la imagen a escala de grises
     imageTensor = tf.image.rgbToGrayscale(imageTensor);
 
-    // Asegurarse de que el tensor tenga 4 dimensiones
-    imageTensor = imageTensor.expandDims(0); // [batchSize, height, width, channels]
+    // Asegurarse de que el tensor tenga 4 dimensiones: [batchSize, height, width, channels]
+    imageTensor = imageTensor.expandDims(0); // [1, 100, 100, 1]
 
     predict(imageTensor);
 });
@@ -52,17 +52,18 @@ switchCameraButton.addEventListener('click', () => {
 
 async function predict(imageTensor) {
     try {
-        // Verificar que la imagen tenga las dimensiones correctas
-        console.log('Tensor de imagen:', imageTensor.shape);
+        // Asegurarse de que el tensor tenga la forma correcta
+        console.log('Forma del tensor:', imageTensor.shape);
 
         // Realizar la predicción
         const prediction = model.predict(imageTensor);
 
-        // Imprimir los resultados de la predicción
-        prediction.print(); // Esto te permitirá ver los valores de predicción en la consola
+        // Asegurarse de que la predicción tenga la forma correcta
+        const predictionArray = await prediction.array();
+        console.log('Predicción:', predictionArray);
 
         // Obtener la clase con la mayor probabilidad
-        const predictedClass = prediction.argMax(1).dataSync()[0];
+        const predictedClass = tf.tensor(predictionArray).argMax(1).dataSync()[0];
         console.log('Clase predicha:', predictedClass);
 
         // Asegúrate de que la clase sea válida
