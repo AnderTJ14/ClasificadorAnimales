@@ -31,12 +31,26 @@ async function loadModel() {
 }
 
 // Evento para capturar imagen y hacer predicción
-captureButton.addEventListener('click', () => {
+captureButton.addEventListener('click', async () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    let imageTensor = tf.browser.fromPixels(canvas).resizeNearestNeighbor([100, 100]).toFloat();
+    let imageTensor = tf.browser.fromPixels(canvas)
+        .resizeNearestNeighbor([100, 100])
+        .toFloat();
+    
+    // Normalizar la imagen
+    imageTensor = imageTensor.div(tf.scalar(255.0));
+    
+    // Convertir a escala de grises
     imageTensor = tf.image.rgbToGrayscale(imageTensor);
-    imageTensor = imageTensor.expandDims(0); // Asegura la forma [1, 100, 100, 1]
-    predict(imageTensor);
+    
+    // Expandir dimensiones
+    imageTensor = imageTensor.expandDims(0);
+    
+    // Verificar la forma del tensor
+    console.log('Forma del tensor de entrada:', imageTensor.shape);
+    
+    // Realizar la predicción
+    await predict(imageTensor);
 });
 
 // Cambiar entre cámara frontal y trasera
@@ -51,7 +65,7 @@ async function predict(imageTensor) {
         const prediction = model.predict(imageTensor);
         const predictionArray = await prediction.array();
         const predictedClass = tf.tensor(predictionArray).argMax(1).dataSync()[0];
-        const classes = ['Perro', 'Gato']; // Asegúrate de actualizar con tus clases
+        const classes = ['Perro', 'Gato'];
         predictionSpan.textContent = `Predicción: ${classes[predictedClass]}`;
     } catch (error) {
         console.error('Error en la predicción:', error);
