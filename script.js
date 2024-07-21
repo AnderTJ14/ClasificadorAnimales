@@ -25,6 +25,7 @@ async function loadModel() {
     try {
         model = await tf.loadLayersModel('model/model.json');
         console.log('Modelo cargado correctamente');
+        model.summary(); // Imprimir un resumen del modelo para verificar la arquitectura
     } catch (error) {
         console.error('Error al cargar el modelo:', error);
     }
@@ -34,7 +35,7 @@ async function loadModel() {
 captureButton.addEventListener('click', async () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     let imageTensor = tf.browser.fromPixels(canvas)
-        .resizeNearestNeighbor([100, 100])
+        .resizeBilinear([100, 100])
         .toFloat();
     
     // Normalizar la imagen
@@ -43,9 +44,9 @@ captureButton.addEventListener('click', async () => {
     // Convertir a escala de grises
     imageTensor = tf.image.rgbToGrayscale(imageTensor);
     
-    // Expandir dimensiones
+    // Ajustar el tamaño y expandir dimensiones
     imageTensor = imageTensor.expandDims(0);
-    
+
     // Verificar la forma del tensor
     console.log('Forma del tensor de entrada:', imageTensor.shape);
     
@@ -62,6 +63,7 @@ switchCameraButton.addEventListener('click', () => {
 // Realizar la predicción con el modelo
 async function predict(imageTensor) {
     try {
+        // Realizar la predicción
         const prediction = model.predict(imageTensor);
         const predictionArray = await prediction.array();
         const predictedClass = tf.tensor(predictionArray).argMax(1).dataSync()[0];
