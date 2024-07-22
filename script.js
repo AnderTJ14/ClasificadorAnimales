@@ -23,7 +23,7 @@ async function setupCamera() {
 // Cargar el modelo de TensorFlow.js
 async function loadModel() {
     try {
-        model = await tf.loadLayersModel('https://raw.githubusercontent.com/AnderTJ14/ClasificadorAnimales/main/model/model.json');
+        model = await tf.loadLayersModel('https://github.com/AnderTJ14/ClasificadorAnimales/blob/main/model/model.json');
         console.log('Modelo cargado correctamente');
     } catch (error) {
         console.error('Error al cargar el modelo:', error);
