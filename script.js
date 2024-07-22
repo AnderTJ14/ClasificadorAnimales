@@ -23,7 +23,7 @@ async function setupCamera() {
 // Cargar el modelo de TensorFlow.js
 async function loadModel() {
     try {
-        model = await tf.loadLayersModel('model/model.json');
+        model = await tf.loadGraphModel('model/model.json');
         console.log('Modelo cargado correctamente');
     } catch (error) {
         console.error('Error al cargar el modelo:', error);
@@ -31,12 +31,12 @@ async function loadModel() {
 }
 
 // Evento para capturar imagen y hacer predicción
-captureButton.addEventListener('click', () => {
+captureButton.addEventListener('click', async () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     let imageTensor = tf.browser.fromPixels(canvas).resizeNearestNeighbor([100, 100]).toFloat();
     imageTensor = tf.image.rgbToGrayscale(imageTensor);
     imageTensor = imageTensor.expandDims(0); // Asegura la forma [1, 100, 100, 1]
-    predict(imageTensor);
+    await predict(imageTensor);
 });
 
 // Cambiar entre cámara frontal y trasera
