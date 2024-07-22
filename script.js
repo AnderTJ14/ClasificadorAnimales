@@ -23,7 +23,7 @@ async function setupCamera() {
 // Cargar el modelo de TensorFlow.js
 async function loadModel() {
     try {
-        model = await tf.loadLayersModel('https://github.com/AnderTJ14/ClasificadorAnimales/model/model.json');
+        model = await tf.loadLayersModel('model/model.json');
         console.log('Modelo cargado correctamente');
     } catch (error) {
         console.error('Error al cargar el modelo:', error);
@@ -52,7 +52,7 @@ async function predict(imageTensor) {
         const predictionArray = await prediction.array();
         const predictedClass = tf.tensor(predictionArray).argMax(1).dataSync()[0];
         const classes = ['Perro', 'Gato']; // Asegúrate de actualizar con tus clases
-        predictionSpan.textContent = `Predicción: ${classes[predictedClass]}`;
+        predictionSpan.textContent = Predicción: ${classes[predictedClass]};
     } catch (error) {
         console.error('Error en la predicción:', error);
         predictionSpan.textContent = 'Error en la predicción';
