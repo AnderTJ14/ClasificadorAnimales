@@ -52,7 +52,7 @@ async function predict(imageTensor) {
         const predictionArray = await prediction.array();
         const predictedClass = tf.tensor(predictionArray).argMax(1).dataSync()[0];
         const classes = ['Perro', 'Gato']; // Asegúrate de actualizar con tus clases
-        predictionSpan.textContent = Predicción: ${classes[predictedClass]};
+        predictionSpan.textContent = `Predicción: ${classes[predictedClass]}`;
     } catch (error) {
         console.error('Error en la predicción:', error);
         predictionSpan.textContent = 'Error en la predicción';
